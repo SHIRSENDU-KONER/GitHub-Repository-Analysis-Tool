@@ -18,8 +18,9 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain import FAISS, PromptTemplate, OpenAI, LLMChain
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
+
 class DotDict:
-    """Converting the dictionary for accesing the contents using dot operator"""
+    """Converting the dictionary for accessing the contents using dot operator"""
     def __init__(self, dictionary):
         for key, value in dictionary.items():
             setattr(self, key, value)
@@ -193,10 +194,10 @@ def get_results(openai_api_key):
             - Maintainability Index of the files/codes as per repository(to be calculated from the code)
             Return only the name of the repository, its complexity score and the analysis of the repository showing why 
             it is the most technically challenging/Complex repository. Try to provide a detailed analysis to hold 
-            your answer strong within 100 words in a paragraph. The output should be in the following format:
+            your answer strong within 100 words in a single paragraph. The output should be in the following format:
             Repository Name: <name of the repository>
             Complexity Score: <complexity score of the repository>
-            Analysis: <analysis of the repository>'''
+            Analysis: <analysis of the repository in a paragraph>'''
     result = chain.run(query)
     print("The Prompt of the Langchain is :", prompt)
 
@@ -226,17 +227,18 @@ def get_each_repo_data(user, repo_name):
         file_content = contents.pop(0)
         file_extension = file_content.name.split(".")[-1]
 
-        # IGNORE ".gitinore", ".github", ".folders" lookalike folders and data folders that may have images as data
+        # IGNORE ".gitignore", ".github", ".folders" lookalike folders and data folders that may have images as data
         if (file_content.name.lower().startswith(".")) or (file_content.name.lower() in ["data", "images", "dataset"]):
             continue
-        # IGNORE files that donot have '.' in their names
+        # IGNORE files that don't have '.' in their names
         elif (file_content.type == 'file') and (
                 '.' not in str(file_content.path)):  # len(file_content.name.split(".")) == 1:
             continue
-
+        # CHECK for directories and file contents
         elif file_content.type == "dir" or file_content.content is None:
             contents.extend(repo_detail.get_contents(file_content.path))
         else:
+            # CHECK for specific files
             if (file_extension not in file_extensions_list) or (file_content.encoding == 'none') or (
                     file_content.encoding is None):
                 continue
