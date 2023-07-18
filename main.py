@@ -1,6 +1,7 @@
 # importing Libraries
 import os
 import time
+
 import github
 import pandas as pd
 import streamlit as st
@@ -86,10 +87,11 @@ if __name__ == "__main__":
     # load the dotenv for accessing the api keys
     load_dotenv()
     git_access_token = os.getenv("GITHUB_API_KEY")  # GITHUB Api Key
-    openai_api_key = os.getenv("OPENAI_API_KEY")  # OpenAI Api Key
+    # openai_api_key = os.getenv("OPENAI_API_KEY")  # OpenAI Api Key
 
     st.title('Github Automated Analysis | Most Technically Complex And Challenging Repo')
     github_url = st.text_input("Please Enter The GitHub User's URL or Username For Analysis")
+    openai_api_key = st.text_input("Please provide the OpenAI API key", type="password")
     if len(github_url.split('/')) > 1:
         username = github_url.split('/')[-1]
     else:
