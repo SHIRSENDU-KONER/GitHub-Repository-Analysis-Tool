@@ -153,26 +153,26 @@ def get_results(openai_api_key):
 
     # Formatting the template for passing it to OpenAI
     template = """You are Super smart Github Repository AI system.You are given a csv file data that have been embedded
-    into FAISS.You are asked to find the most technically complex and challenging repository from the given csv.
-    Retrieve the data from there and return the repository name that you consider to be the most complex.
-    To measure the technical complexity of a GitHub repository, You will analyze and calculate various factors like 
-    Cyclomatic Complexity, Halstead Complexity, Maintainability Index and any other factor asked in the question 
-    from the source data. Additionally, you will consider the programming languages used, the size of the codebase. 
+        into FAISS.You are asked to find the most technically complex and challenging repository from the given csv.
+        Retrieve the data from there and return the repository name that you consider to be the most complex.
+        To measure the technical complexity of a GitHub repository, You will analyze and calculate various factors like 
+        Cyclomatic Complexity, Halstead Complexity, Maintainability Index and any other factor asked in the question 
+        from the source data. Additionally, you will consider the programming languages used, the size of the codebase. 
 
-    {context}
+        {context}
 
-    Answer the question below:
+        Answer the question below:
 
-    Question: {question}
-    Answer:"""
+        Question: {question}
+        Answer:"""
 
     prompt = PromptTemplate(template=template, input_variables=["context", "question"])
 
     prompt.format(
-        context='''You can consider other factors as well if you think they are relevant for determining the technical complexity of a
-        GitHub repository.
-        Calculate the complexity score for each repo by assigning weights to each factor and summing up the weighted scores.
-        The repo with the highest complexity score will be considered the most technically complex.''',
+        context='''You can consider other factors as well if you think they are relevant for determining the technical 
+                complexity of a GitHub repository.
+                Calculate the complexity score for each repo by assigning weights to each factor and summing up the weighted scores.
+                The repo with the highest complexity score will be considered the most technically complex.''',
         question="",
     )
     chain_type_kwargs = {"prompt": prompt}
@@ -184,20 +184,20 @@ def get_results(openai_api_key):
     )
     query = '''Which is the most complex repository depending upon the following factors:
             - No. of Files in the repository
-            - languages used in the repository file data
-            - Contents of the repository files
+            - Programming languages used in the repository files
             - Complexity of the statements used as code
-            - Packages and Modules imported inside the repo
+            - Packages and Modules imported inside the repo (to be calculated from the code)
             - No.of logical lines of code or lines of executable source code
-            - Cyclomatic Complexity of the files/codes per repository(to be calculated from the code)
-            - Halstead Complexity of the files/codes as per repository(to be calculated from the code)
-            - Maintainability Index of the files/codes as per repository(to be calculated from the code)
-            Return only the name of the repository, its complexity score and the analysis of the repository showing why 
-            it is the most technically challenging/Complex repository. Try to provide a detailed analysis to hold 
-            your answer strong within 100 words in a single paragraph. The output should be in the following format:
+            - Cyclomatic Complexity of the files/codes per repository
+            - Halstead Complexity of the files/codes as per repository
+            - Maintainability Index of the files/codes as per repository
+            Return only the name of the repository, its complexity score (within a scale of 1-100) and the analysis of 
+            the repository showing why it is the most technically challenging/Complex repository. Try to provide a 
+            detailed analysis to hold your answer strong within 150 words in a paragraph. The output should be in the 
+            following format:
             Repository Name: <name of the repository>
             Complexity Score: <complexity score of the repository>
-            Analysis: <analysis of the repository in a paragraph>'''
+            Analysis: <analysis of the repository in a paragraph of about 150 words>'''
     result = chain.run(query)
     print("The Prompt of the Langchain is :", prompt)
 
@@ -257,7 +257,7 @@ def get_each_repo_data(user, repo_name):
                     # Get the analysed data, complexity score and Halstead report
                     analyzed_data, complexity_score, halsteid_report = analysze_data(file_content_decoded)
 
-                    FILE_DETAILS = {'data': file_content_decoded, 'loc': analyzed_data.loc, 'lloc': analyzed_data.lloc,
+                    FILE_DETAILS = {'loc': analyzed_data.loc, 'lloc': analyzed_data.lloc,
                                     'sloc': analyzed_data.sloc, 'comments': analyzed_data.comments,
                                     'single_comments': analyzed_data.single_comments,
                                     'multiline_comments': analyzed_data.multi, 'blank_lines': analyzed_data.blank,
