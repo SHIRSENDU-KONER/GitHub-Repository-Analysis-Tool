@@ -102,13 +102,15 @@ def display_repo_names_and_url(username, access_token):
     cnt = 0
     repo_names = []
     repo_descriptions = {}
+    repo_url = []
     for repo in user.get_repos():
         cnt += 1
         repo_names.append(repo.name)
         description = repo.description
+        repo_url.append(repo.html_url)
         repo_descriptions[repo.name] = description if description else None
 
-    return user, repo_names, repo_descriptions
+    return user, repo_names, repo_descriptions, repo_url
 
 
 def calculate_metrics(code):
@@ -193,13 +195,18 @@ def get_results(openai_api_key):
             - Maintainability Index of the files/codes as per repository
             Return only the name of the repository, its complexity score (within a scale of 1-100) and the analysis of 
             the repository showing why it is the most technically challenging/Complex repository. Try to provide a 
-            detailed analysis to hold your answer strong within 150 words in a paragraph. The output should be in the 
+            detailed analysis to hold your answer strong within 200 words in a paragraph. The output should be in the 
             following format:
+            [start a new line]
             Repository Name: <name of the repository>
+            [start a new line]
+            Repository Link: <link to the repository>
+            [start a new line]
             Complexity Score: <complexity score of the repository>
+            [start a new line]
             Analysis: <analysis of the repository in a paragraph of about 150 words>'''
     result = chain.run(query)
-    print("The Prompt of the Langchain is :", prompt)
+    # print("The Prompt of the Langchain is :", prompt)
 
     if not result:
         return "No result."
@@ -308,7 +315,7 @@ def process_chunk(text):
     embeddings = OpenAIEmbeddings()
     vectors = FAISS.from_texts(chunks, embeddings)
     # Create a question-answering chain using the index
-    print("CHECK - 2")
+    # print("CHECK - 2")
     context = """You are Super smart Github Repository AI system. You are a super intelligent AI that answers questions 
     about Github Repositories and can understand the technical complexity if the repo.
 
