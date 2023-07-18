@@ -1,12 +1,20 @@
 # importing Libraries
+import subprocess
+
+# Define the command to install dependencies
+install_command = ['pip', 'install', '-r', 'requirements.txt']
+
+# Run the command to install the dependencies
+subprocess.check_call(install_command)
+
 import os
 import time
-
 import github
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 from utilities import *
+
 
 # Defining the main function
 def main(username, git_access_token):
