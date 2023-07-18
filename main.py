@@ -47,13 +47,12 @@ def main(username, git_access_token):
             # STEP - 3 : CONVERT THE DATA INTO A STRUCTURED FORMAT
             st.write("Proceeding to convert fetched data into a csv file...")
             x = time.time()
-            df = pd.DataFrame(columns=["repo", "file", "content", "loc", "lloc", "sloc", "blank_lines", "comments",
+            df = pd.DataFrame(columns=["repo", "file", "loc", "lloc", "sloc", "blank_lines", "comments",
                                        "multiline_comments", "single_comments", "cyclomatic_complexity",
                                        "halstead_report"])
             data_rows = []
             for rep, files in all_repo_details.items():
                 for file, file_info in files.items():
-                    content = str(file_info.get('data', ''))
                     loc = file_info.get('loc', '')
                     lloc = file_info.get('lloc', '')
                     sloc = file_info.get('sloc', '')
@@ -68,7 +67,6 @@ def main(username, git_access_token):
                     data_rows.append({
                         "repo": rep,
                         "file": file,
-                        "content": content,
                         "loc": loc,
                         "lloc": lloc,
                         "sloc": sloc,
