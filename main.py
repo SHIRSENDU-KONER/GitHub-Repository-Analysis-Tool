@@ -1,3 +1,4 @@
+# importing Libraries
 import os
 import time
 import github
@@ -6,8 +7,10 @@ import streamlit as st
 from dotenv import load_dotenv
 from utilities import *
 
-
+# Defining the main function
 def main(username, git_access_token):
+    """Takes 2 parameter as input, username and github_access_token;
+    returns the saved data into a csv file"""
     if username:
         try:
             # STEP - 1 : FETCHING THE REPO NAMES
@@ -93,7 +96,7 @@ if __name__ == "__main__":
         username = github_url
 
     # Running the code
-    with st.form('Demo_form', clear_on_submit=True):
+    with st.form('Github_repo_analysis', clear_on_submit=True):
         submitted = st.form_submit_button('Search')
         if submitted and openai_api_key.startswith('sk-'):
             with st.spinner('Calculating...'):
